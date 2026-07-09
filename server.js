@@ -2,8 +2,9 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-const multer = require('multer'); // <--- novo 
+const multer = require('multer'); 
 const path = require('path');
+const fs = require('fs'); 
 const { error } = require('console');
 require("dotenv").config();
 
@@ -14,6 +15,11 @@ const port = process.env.PORT || 3000
 
 app.use(cors());
 app.use(express.json());
+
+if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
+  fs.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+}
+
 
 // Habilita a pasta "uploads" para acesso público
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
