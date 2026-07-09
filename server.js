@@ -16,8 +16,9 @@ const port = process.env.PORT || 3000
 app.use(cors());
 app.use(express.json());
 
+// Verifica se a pasta existe, se não existir, cria de forma síncrona
 if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
-  fs.mkdir(path.join(__dirname, 'uploads'), { recursive: true });
+  fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true }); // <-- O segredo é o Sync no final!
 }
 
 
