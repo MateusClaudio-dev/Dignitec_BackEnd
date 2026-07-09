@@ -210,11 +210,16 @@ app.get('/anuncios', (req, res) => {
         ? parseFloat(anuncio.distancia.toFixed(1))
         : null;
 
+      const base_url = process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : `htpp://localhost:${port}`;
+
       return {
         ...anuncio, 
         distancia: distanciaFormatada, // Adiciona a distância bonitinha no objeto
-        imagemURL: anuncio.imagemCapa ? `http://localhost:${port}/uploads/${anuncio.imagemCapa}` : 'assets/sem-imagem.png'
+        imagemURL: anuncio.imagemCapa ? `${base_url}/uploads/${anuncio.imagemCapa}` : 'assets/sem-imagem.png'
       };
+        // imagemURL: anuncio.imagemCapa ? `http://localhost:${port}/uploads/${anuncio.imagemCapa}` : 'assets/sem-imagem.png'
     });
 
     res.json(anuncio_Com_Imagem_Tratada);
