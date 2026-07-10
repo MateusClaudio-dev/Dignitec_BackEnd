@@ -49,12 +49,25 @@ const upload = multer({ storage });
 //});
 
 // Configura a conexão com o banco de dados MySQL usando o .env
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,       // Puxa o HOST do .env
-  user: process.env.MYSQLUSER,       // Puxa o USER do .env
-  password: process.env.MYSQLPASSWORD, // Puxa a SENHA do .env
-  database: process.env.MYSQLDATABASE, // Puxa o NOME DO BANCO do .env
-  port: process.env.MYSQLPORT || 3306  // Puxa a PORTA do .env (se não achar, usa 3306)
+//const db = mysql.createConnection({
+//  host: process.env.MYSQLHOST,       // Puxa o HOST do .env
+//  user: process.env.MYSQLUSER,       // Puxa o USER do .env
+//  password: process.env.MYSQLPASSWORD, // Puxa a SENHA do .env
+//  database: process.env.MYSQLDATABASE, // Puxa o NOME DO BANCO do .env
+//  port: process.env.MYSQLPORT || 3306  // Puxa a PORTA do .env (se não achar, usa 3306)
+//});
+
+// CONFIGURAÇÃO DO BANCO DE DADOS (COM POOL)
+// O Pool gerencia conexões dinamicamente e evita quedas por inatividade (Timeout) no Railway e Local
+const db = mysql.createPool({
+  host: process.env.MYSQLHOST,         // Puxa do .env local ou do painel do Railway
+  user: process.env.MYSQLUSER,         // Puxa do .env local ou do painel do Railway
+  password: process.env.MYSQLPASSWORD, // Puxa do .env local ou do painel do Railway
+  database: process.env.MYSQLDATABASE, // Puxa do .env local ou do painel do Railway
+  port: process.env.MYSQLPORT || 3306, // Usa a porta do ambiente ou a padrão 3306
+  waitForConnections: true,            // Se todas as conexões estiverem ocupadas, espera liberar uma
+  connectionLimit: 10,                 // Máximo de conexões abertas ao mesmo tempo
+  queueLimit: 0                        // Sem limite de requisições na fila de espera
 });
 
 db.connect((err) => {
