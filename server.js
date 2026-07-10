@@ -59,6 +59,7 @@ const upload = multer({ storage });
 
 // CONFIGURAÇÃO DO BANCO DE DADOS (COM POOL)
 // O Pool gerencia conexões dinamicamente e evita quedas por inatividade (Timeout) no Railway e Local
+
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,         // Puxa do .env local ou do painel do Railway
   user: process.env.MYSQLUSER,         // Puxa do .env local ou do painel do Railway
@@ -70,12 +71,13 @@ const db = mysql.createPool({
   queueLimit: 0                        // Sem limite de requisições na fila de espera
 });
 
-db.connect((err) => {
-  if (err) console.error('Erro ao conectar ao MySQL:', err);
-  else console.log('Conectado ao MySQL com sucesso!');
-});
+// db.connect((err) => {
+//   if (err) console.error('Erro ao conectar ao MySQL:', err);
+//   else console.log('Conectado ao MySQL com sucesso!');
+// });
 
 // Rota para criar conta
+
 app.post('/criarConta', (req, res) => {
   const {nome, email, senha, confirmarSenha, tipoConta} = req.body;
   const sql = 'INSERT INTO usuarios (nome, email, senha, tipoConta) VALUES (?, ?, ?, ?)';
