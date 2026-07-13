@@ -105,7 +105,11 @@ app.post('/login', (req, res) => {
     const usuarioDoBanco = results[0]
 
     if (senha === usuarioDoBanco.senha) {
-      res.status(200).json({message: 'Login realizado com sucesso'});
+      res.status(200).json({
+        message: 'Login realizado com sucesso',
+        tipoConta: usuarioDoBanco.tipoConta,
+        nome: usuarioDoBanco.nome
+      });
     } else {
       res.status(401).json({message: 'E-mail ou senha incorretos'})
     }
