@@ -236,9 +236,9 @@ app.get('/anuncios', (req, res) => {
         ? parseFloat(anuncio.distancia.toFixed(1))
         : null;
 
-      const base_url = process.env.RAILWAY_PUBLIC_DOMAIN
+      const base_url = process.env.RAILWAY_PUBLIC_DOMAIN 
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
-      : `htpp://localhost:${port}`;
+      : `http://localhost:${port}`;
 
       return {
         ...anuncio, 
