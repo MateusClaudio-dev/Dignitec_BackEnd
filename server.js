@@ -12,6 +12,7 @@ require("dotenv").config();
 // Cria o app Express
 const app = express();
 const port = process.env.PORT || 3000
+const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(cors());
 app.use(express.json());
@@ -236,9 +237,9 @@ app.get('/anuncios', (req, res) => {
         ? parseFloat(anuncio.distancia.toFixed(1))
         : null;
 
-      const base_url = process.env.RAILWAY_PUBLIC_DOMAIN 
-      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
-      : `http://localhost:${port}`;
+      const base_url = isProduction 
+        ? process.env.RENDER_EXTERNAL_URL 
+        : `http://localhost:${port}`;
 
       return {
         ...anuncio, 
