@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS form_anuncio (
     localizacao VARCHAR(255),
     contato VARCHAR(255),
     imagemCapa VARCHAR(255),
+    latitude DECIMAL(10,8) NULL,
+    longitude DECIMAL(11,8) NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )`;
 
