@@ -33,10 +33,6 @@ CREATE TABLE IF NOT EXISTS form_anuncio (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );`;
 
-// Comandos para garantir a adição das colunas caso a tabela já exista sem elas
-const sqlAlterAnuncio1 = `ALTER TABLE form_anuncio ADD COLUMN IF NOT EXISTS latitude DECIMAL(10,8) NULL;`;
-const sqlAlterAnuncio2 = `ALTER TABLE form_anuncio ADD COLUMN IF NOT EXISTS longitude DECIMAL(11,8) NULL;`;
-
 const sqlCliquesAnuncios = `
 CREATE TABLE IF NOT EXISTS cliques_anuncios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +41,6 @@ CREATE TABLE IF NOT EXISTS cliques_anuncios (
     FOREIGN KEY (anuncio_id) REFERENCES form_anuncio(id) ON DELETE CASCADE
 );`;
 
-// Execução sequencial com segurança
 db.query(sqlUsuarios, err => {
     if (err) { console.error("Erro na tabela usuarios:", err); process.exit(1); }
     console.log("Tabela usuarios verificada/criada!");
@@ -54,18 +49,20 @@ db.query(sqlUsuarios, err => {
         if (err) { console.error("Erro na tabela form_anuncio:", err); process.exit(1); }
         console.log("Tabela form_anuncio verificada/criada!");
 
-        // Adiciona latitude se não existir
-        db.query(sqlAlterAnuncio1, () => {
-            // Adiciona longitude se não existir
-            db.query(sqlAlterAnuncio2, () => {
-                
+        // Adiciona latitude (ignora automaticamente se a coluna já existir - erro 1060)
+        db.query(`ALTER TABLE form_anuncio ADD COLUMN latitude DECIMAL(10,8) NULL;`, (err) => {
+            if (err && err.errno !== 1060) console.log("Aviso latitude:", err.message);
+
+            // Adiciona longitude (ignora automaticamente se a coluna já existir - erro 1060)
+            db.query(`ALTER TABLE form_anuncio ADD COLUMN longitude DECIMAL(11,8) NULL;`, (err) => {
+                if (err && err.errno !== 1060) console.log("Aviso longitude:", err.message);
+
                 db.query(sqlCliquesAnuncios, err => {
                     if (err) { console.error("Erro na tabela cliques_anuncios:", err); process.exit(1); }
                     console.log('Tabela cliques_anuncios verificada/criada!');
                     console.log('Banco de dados atualizado com sucesso!');
                     db.end(); 
                 });
-
             });
         });
     });
